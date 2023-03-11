@@ -1,9 +1,17 @@
 {
-  "name": "s3-sync-deploy-action",
+  "name": "@monim67/s3-sync-deploy-action",
   "version": "0.1.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "license": "MIT",
+  "author": {
+    "name": "Munim Munna",
+    "email": "6266677+monim67@users.noreply.github.com"
+  },
+  "repository": {
+    "url": "https://github.com/monim67/s3-sync-deploy-action.git",
+    "type": "git"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
