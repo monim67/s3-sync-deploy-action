@@ -1,0 +1,23 @@
+name: Publish to npmjs
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Publish
+        run: yarn publish --access public --new-version ${{ github.ref_name }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
