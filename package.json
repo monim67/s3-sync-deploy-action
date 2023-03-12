@@ -1,5 +1,6 @@
 {
   "name": "@monim67/s3-sync-deploy-action",
+  "description": "AWS CDK Codepipeline Action construct to deploy website to s3 deleting old files",
   "version": "0.1.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,6 +13,7 @@
     "url": "https://github.com/monim67/s3-sync-deploy-action.git",
     "type": "git"
   },
+  "keywords": ["awscdk", "aws-cdk"],
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

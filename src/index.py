@@ -13,22 +13,23 @@ if TYPE_CHECKING:
 
 def handler(event: "CodePipelineEvent", context: Any) -> None:
     codepipeline = boto3.client("codepipeline")
-    return sync_artifact(event, codepipeline)
+    try:
+        return sync_artifact(event, codepipeline)
+    except Exception as exc:
+        codepipeline.put_job_failure_result(
+            jobId=event["CodePipeline.job"]["id"],
+            failureDetails={"type": "JobFailed", "message": str(exc)},
+        )
 
 
 def sync_artifact(event: "CodePipelineEvent", codepipeline: Any) -> None:
-    def fail(message: str):
-        codepipeline.put_job_failure_result(
-            jobId=job["id"], failureDetails={"type": "JobFailed", "message": message}
-        )
-
     job = event["CodePipeline.job"]
     bucket_name = os.getenv("BUCKET_NAME")
     bucket_prefix = (os.getenv("BUCKET_PREFIX", "") + "/").lstrip("/")
     if not bucket_name:
-        return fail("Missing env BUCKET_NAME")
+        raise ValueError("Missing env BUCKET_NAME")
     if len(job["data"]["inputArtifacts"]) != 1:
-        return fail("Artifact count should be 1")
+        raise ValueError("Artifact count should be 1")
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmpdirpath = Path(tmpdirname)
@@ -59,7 +60,7 @@ def sync_artifact(event: "CodePipelineEvent", codepipeline: Any) -> None:
                     Filename=str(file_name),
                     Bucket=bucket_name,
                     Key=f"{bucket_prefix}{file_name.relative_to(tmpdirpath)}",
-                    ExtraArgs={"ContentType": content_type},
+                    ExtraArgs={"ContentType": content_type} if content_type else None,
                 )
 
     codepipeline.put_job_success_result(jobId=job["id"])
