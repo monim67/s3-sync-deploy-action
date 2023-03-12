@@ -18,6 +18,6 @@ jobs:
       - name: Build
         run: yarn build
       - name: Publish
-        run: yarn publish --access public --new-version ${{ github.ref_name }}
+        run: yarn publish --access public --new-version ${{ github.ref_name }} --no-git-tag-version
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
