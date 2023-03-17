@@ -15,7 +15,6 @@ export class S3SyncDeployAction extends Action {
   constructor(props: S3SyncDeployActionProps) {
     super({
       ...props,
-      resource: props.bucket,
       category: ActionCategory.INVOKE,
       provider: "Lambda",
       artifactBounds: {
